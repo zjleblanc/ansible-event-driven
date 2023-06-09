@@ -1,0 +1,34 @@
+- name: Respond to SCADA data
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    small_max: 50
+    medium_max: 150
+
+  tasks:
+    - name: Indicate small change
+      when: change_kw <= small_max
+      vars:
+        eda_indicator_color: green
+        eda_indicator_message: "Power generation change between 0 and {{ small_max }} kW"
+      ansible.builtin.include_role:
+        name: scada_dashboard
+
+    - name: Indicate medium change
+      when:
+        - change_kw > small_max
+        - change_kw <= medium_max
+      vars:
+        eda_indicator_color: yellow
+        eda_indicator_message: "(Warning) Power generation change between {{ small_max }} and {{ medium_max }} kW"
+      ansible.builtin.include_role:
+        name: scada_dashboard
+
+    - name: Indicate large change
+      when: change_kw > medium_max
+      vars:
+        eda_indicator_color: red
+        eda_indicator_message: "(ALERT) Power generation change greater than {{ medium_max }} kW"
+      ansible.builtin.include_role:
+        name: scada_dashboard

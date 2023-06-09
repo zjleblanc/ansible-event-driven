@@ -1,0 +1,8 @@
+---
+- name: Display power change
+  ansible.builtin.debug:
+    msg: "{{ eda_indicator_message }}"
+
+- name: Update Grafana dashboard
+  when: update_grafana|default(false)
+  ansible.builtin.include_tasks: grafana.yml

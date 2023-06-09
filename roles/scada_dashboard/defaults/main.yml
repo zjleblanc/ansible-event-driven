@@ -1,0 +1,7 @@
+grafana_admin_api_key: override_me
+grafana_admin_base_url: override_me
+
+indicator_color_lookup:
+  green: "#2dc937"
+  yellow: "#e7b416"
+  red: "#cc3232"

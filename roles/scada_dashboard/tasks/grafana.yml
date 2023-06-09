@@ -1,0 +1,45 @@
+---
+- name: Get current state of dashboard
+  register: r_dash_get
+  ansible.builtin.uri:
+    url: "https://{{ grafana_admin_base_url }}/api/dashboards/uid/{{ grafana_eda_dashboard_uid }}"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ grafana_admin_api_key }}"
+
+- name: Construct change object
+  ansible.builtin.set_fact:
+    dash_changes:
+      templating:
+        list:
+          - name: eda_indicator_color
+            hide: 2
+            current:
+              selected: true
+              text: "{{ indicator_color_lookup[eda_indicator_color] }}"
+              value: "{{ indicator_color_lookup[eda_indicator_color] }}"
+            options: []
+            query: ""
+            skipUrlSync: false
+            type: textbox
+          - name: eda_indicator_message
+            hide: 2
+            current:
+              selected: true
+              Text: "{{ eda_indicator_message }}"
+              value: "{{ eda_indicator_message }}"
+            options: []
+            query: ""
+            skipUrlSync: false
+            type: textbox
+
+- name: Update dashboard
+  register: r_dash_update
+  ansible.builtin.uri:
+    url: "https://{{ grafana_admin_base_url }}/api/dashboards/db"
+    method: POST
+    headers:
+      Authorization: "Bearer {{ grafana_admin_api_key }}"
+    body_format: json
+    body:
+      dashboard: "{{ r_dash_get.json.dashboard | combine(dash_changes) }}"

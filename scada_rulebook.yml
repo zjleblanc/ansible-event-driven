@@ -1,0 +1,18 @@
+- name: Subscribe to scada topic on local kafka broker
+  hosts: localhost
+
+  sources:
+    - ansible.eda.kafka:
+        host: localhost
+        port: 9092
+        topic: scada-data
+        group_id: demo
+
+  rules:
+    - name: kafka
+      condition: event.body.change_kw is defined
+      action:
+        run_playbook:
+          name: scada_action.yml
+          extra_vars:
+            change_kw: "{{ event.body.change_kw | float | abs }}"

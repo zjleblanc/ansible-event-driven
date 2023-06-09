@@ -1,3 +1,11 @@
+# Project specific
+oil_*
+datasets/raw
+kafka/
+*.secret
+.vscode/
+inventory.yml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
