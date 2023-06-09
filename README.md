@@ -10,6 +10,17 @@ Event Driven Ansible (EDA) example workflows (sources, rulebooks, playbooks)
 
 - Install Kafka using the [quickstart docs](https://kafka.apache.org/quickstart)
 - Unzip the [kaggle dataset](./datasets/wind_turbine.zip) to `/datasets/raw/wind_turbine`
+- Create an inventory with your grafana information
+  ```yaml
+  all:
+  children:
+    ungrouped:
+      hosts:
+        localhost:
+          ansible_connection: local
+          grafana_admin_api_key: <token>
+          grafana_eda_dashboard_uid: <guid>
+  ```
 
 ### Initialize Kafka Environment
 1. Start Zookeeper server<br>
